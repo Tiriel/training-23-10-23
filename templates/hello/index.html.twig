@@ -2,6 +2,8 @@
 
 {% block title %}Hello HelloController!{% endblock %}
 
+{% block navbar '' %}
+
 {% block body %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
@@ -15,6 +17,13 @@
     <ul>
         <li>Your controller at <code><a href="{{ '/home/benjamin/Dev/sl/formations/training-23-10-23/src/Controller/HelloController.php'|file_link(0) }}">src/Controller/HelloController.php</a></code></li>
         <li>Your template at <code><a href="{{ '/home/benjamin/Dev/sl/formations/training-23-10-23/templates/hello/index.html.twig'|file_link(0) }}">templates/hello/index.html.twig</a></code></li>
+        <li><a href="{{ path('app_book_show') }}">First movie</a></li>
+{#
+        {% for letter in 'a'..'z' %}
+            <li id="li_letter_{{ loop.index0 }}">{{ loop.index }} : {{ letter }}</li>
+        {% endfor %}
+#}
+        {% dump %}
     </ul>
 </div>
 {% endblock %}
