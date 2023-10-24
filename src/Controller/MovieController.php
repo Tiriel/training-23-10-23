@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,10 +32,18 @@ class MovieController extends AbstractController
 
     #[Route('/new', name: 'app_movie_new')]
     #[Route('/{id<\d+>}/edit', name: 'app_movie_edit')]
-    public function save(?Movie $movie): Response
+    public function save(Request $request, EntityManagerInterface $manager, ?Movie $movie): Response
     {
         $movie ??= new Movie();
         $form = $this->createForm(MovieType::class, $movie);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($movie);
+            $manager->flush();
+
+            return $this->redirectToRoute('app_movie_show', ['id' => $movie->getId()]);
+        }
 
         return $this->render('movie/save.html.twig', [
             'movie' => $movie,

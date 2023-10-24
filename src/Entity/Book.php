@@ -8,10 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ORM\ChangeTrackingPolicy('DEFERRED_EXPLICIT')]
+#[UniqueEntity(['title', 'releasedAt'])]
 class Book
 {
     #[ORM\Id]
@@ -20,9 +23,11 @@ class Book
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $id = null;
 
+    #[Assert\NotBlank()]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Assert\Isbn(type: 'isbn13')]
     #[ORM\Column(length: 20)]
     private ?string $isbn = null;
 
@@ -35,9 +40,12 @@ class Book
     #[ORM\Column(type: Types::TEXT)]
     private ?string $plot = null;
 
+    #[Assert\Url]
     #[ORM\Column(length: 255)]
     private ?string $cover = null;
 
+    #[Assert\Unique()]
+    #[Assert\Valid()]
     #[ORM\OneToMany(mappedBy: 'book', targetEntity: Comment::class, cascade: ['persist'] ,orphanRemoval: true)]
     private Collection $comments;
 
