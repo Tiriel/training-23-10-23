@@ -9,6 +9,7 @@ use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
@@ -42,14 +43,20 @@ class BookController extends AbstractController
     }
 
     #[Route('/new', name: 'app_book_new', priority: 1)]
-    public function new(): Response
+    public function new(Request $request, EntityManagerInterface $manager): Response
     {
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
 
-        //return $this->redirectToRoute('app_book_show', [
-        //    'id' => $book->getId()
-        //]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($book);
+            $manager->flush();
+
+            return $this->redirectToRoute('app_book_show', [
+                'id' => $book->getId()
+            ]);
+        }
 
         return $this->render('book/new.html.twig', [
             'form' => $form,
