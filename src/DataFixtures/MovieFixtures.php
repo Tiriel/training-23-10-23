@@ -34,13 +34,13 @@ class MovieFixtures extends Fixture
                 ->setPrice(5.0)
             ;
 
-            //foreach (explode(', ', $datum['Genre']) as $genreName) {
-            //    $genre = \array_key_exists($genreName, $genres)
-            //        ? $genres[$genreName]
-            //        : $genres[$genreName] = (new Genre())->setName($genreName);
-            //
-            //    $movie->addGenre($genre);
-            //}
+            foreach (explode(', ', $datum['Genre']) as $genreName) {
+                $genre = \array_key_exists($genreName, $genres)
+                    ? $genres[$genreName]
+                    : $genres[$genreName] = (new Genre())->setName($genreName);
+
+                $movie->addGenre($genre);
+            }
 
             yield $movie;
         }
