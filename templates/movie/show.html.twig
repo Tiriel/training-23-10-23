@@ -1,16 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title movie.title %}
+{% block title movie.title ?? 'Movie not found' %}
 
 {% block body %}
 <div class="example-wrapper">
-    <h1>{{ movie.title }}</h1>
+    {% if movie is not null %}
+        <h1>{{ movie.title }}</h1>
 
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Id : {{ movie.id }}</li>
-        <li class="list-group-item">Country : {{ movie.country }}</li>
-        <li class="list-group-item">Released at : {{ movie.releasedAt|date('d M Y') }}</li>
-        <li class="list-group-item">Genres : {{ movie.genres|join(', ') }}</li>
-    </ul>
+        <img src="{{ movie.poster }}" alt="{{ movie.title }} poster" class="float-end">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Id : {{ movie.id }}</li>
+            <li class="list-group-item">Country : {{ movie.country }}</li>
+            <li class="list-group-item">Released at : {{ movie.releasedAt|date('d M Y') }}</li>
+            <li class="list-group-item">Plot : {{ movie.plot }}</li>
+    {#        <li class="list-group-item">Genres : {{ movie.genres|join(', ') }}</li>#}
+        </ul>
+    {% else %}
+        <h1>Movie not found.</h1>
+    {% endif %}
 </div>
 {% endblock %}
