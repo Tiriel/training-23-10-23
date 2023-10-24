@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/book')]
 class BookController extends AbstractController
@@ -24,19 +25,17 @@ class BookController extends AbstractController
         ]);
     }
 
-    #[Route('/{!id<\d+>?2}',
+    #[Route('/{!id}',
         name: 'app_book_show',
-        requirements: ['id' => '\d+'],
-        defaults: ['id' => 2],
         methods: ['GET', 'POST'],
     //condition: "request.headers.get('x-custom-header') == 'foo'"
     )]
-    public function show(BookRepository $repository, int $id = 1): Response
+    public function show(BookRepository $repository, Uuid $id): Response
     {
         $book = $repository->find($id);
 
         return $this->render('book/show.html.twig', [
-            'controller_name' => 'BookController::show - id: '.$id,
+            'book' => $book,
         ]);
     }
 
