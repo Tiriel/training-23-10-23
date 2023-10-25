@@ -51,6 +51,16 @@ class MovieController extends AbstractController
         ]);
     }
 
+    #[Route('/omdb/{title}', name: 'app_movie_omdb', methods: ['GET'])]
+    public function omdb(string $title): Response
+    {
+        $movie = [];
+
+        return $this->render('movie/show.html.twig', [
+            'movie' => $movie,
+        ]);
+    }
+
     public function lastMovies(MovieRepository $repository): Response
     {
         $lastMovies = $repository->findBy([], ['releasedAt' => 'DESC'], 10);

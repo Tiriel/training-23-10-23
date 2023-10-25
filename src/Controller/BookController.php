@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Book\BookManager;
 use App\Entity\Book;
 use App\Entity\Comment;
 use App\Form\BookType;
@@ -18,13 +19,10 @@ use Symfony\Component\Uid\Uuid;
 class BookController extends AbstractController
 {
     #[Route('', name: 'app_book_index')]
-    public function index(BookRepository $repository): Response
+    public function index(BookManager $manager): Response
     {
-        $books = $repository->findBy([], ['releasedAt' => 'DESC'], 9);
-
         return $this->render('book/index.html.twig', [
-            'controller_name' => 'BookController::index',
-            'books' => $books,
+            'books' => $manager->getBookList(),
         ]);
     }
 
