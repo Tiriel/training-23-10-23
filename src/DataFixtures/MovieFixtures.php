@@ -31,6 +31,8 @@ class MovieFixtures extends Fixture
                 ->setCountry($datum['Country'])
                 ->setReleasedAt(new \DateTimeImmutable($date))
                 ->setPoster($datum['Poster'])
+                ->setImdbId($datum['imdbID'])
+                ->setRated($datum['Rated'])
                 ->setPrice(5.0)
             ;
 

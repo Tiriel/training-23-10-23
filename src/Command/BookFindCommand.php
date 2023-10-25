@@ -16,6 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class BookFindCommand extends Command
 {
+    private ?SymfonyStyle $io = null;
     public function __construct()
     {
         parent::__construct();
@@ -39,6 +40,8 @@ class BookFindCommand extends Command
         if (null !== $lastname) {
             $io->note(sprintf('You passed a lastname: %s', $lastname));
         }
+
+        $this->io?->text('Je fonctionne');
 
         $firstname = $input->getArgument('firstname');
 

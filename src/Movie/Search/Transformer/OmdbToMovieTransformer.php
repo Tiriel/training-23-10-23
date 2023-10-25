@@ -14,9 +14,13 @@ class OmdbToMovieTransformer implements OmdbToEntityTransformerInterface
         'Country',
         'Poster',
         'Genre',
+        'imdbID',
+        'Rated'
     ];
 
-    public function __construct(private readonly OmdbToGenreTransformer $genreTransformer) {}
+    public function __construct(private readonly OmdbToGenreTransformer $genreTransformer)
+    {
+    }
 
     public function transform(mixed $value): Movie
     {
@@ -32,6 +36,8 @@ class OmdbToMovieTransformer implements OmdbToEntityTransformerInterface
             ->setCountry($value['Country'])
             ->setReleasedAt(new \DateTimeImmutable($date))
             ->setPoster($value['Poster'])
+            ->setImdbId($value['imdbID'])
+            ->setRated($value['Rated'])
             ->setPrice(5.0)
         ;
     }
