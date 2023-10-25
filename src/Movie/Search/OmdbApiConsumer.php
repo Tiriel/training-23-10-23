@@ -7,7 +7,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class OmdbApiConsumer
 {
-    private readonly HttpClientInterface $omdbClient;
+    public function __construct(
+        private readonly HttpClientInterface $omdbClient
+    ) {}
 
     public function fetchMovie(SearchTypes $type, string $value): array
     {
