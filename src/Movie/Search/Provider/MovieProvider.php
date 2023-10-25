@@ -11,7 +11,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class MovieProvider implements ProviderInterface
 {
-    private ?SymfonyStyle $io;
+    private ?SymfonyStyle $io = null;
 
     public function __construct(
         private readonly OmdbApiConsumer $consumer,
