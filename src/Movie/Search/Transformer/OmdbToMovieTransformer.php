@@ -2,7 +2,6 @@
 
 namespace App\Movie\Search\Transformer;
 
-use App\Entity\Genre;
 use App\Entity\Movie;
 
 class OmdbToMovieTransformer implements OmdbToEntityTransformerInterface
@@ -14,19 +13,20 @@ class OmdbToMovieTransformer implements OmdbToEntityTransformerInterface
         'Plot',
         'Country',
         'Poster',
+        'Genre',
     ];
 
     public function __construct(private readonly OmdbToGenreTransformer $genreTransformer) {}
 
     public function transform(mixed $value): Movie
     {
-        if (!\is_array($value) || \count(array_diff(self::KEYS, array_keys($value))) > 0) {
+        if (!\is_array($value) || \count(array_diff(self::KEYS, \array_keys($value))) > 0) {
             throw new \InvalidArgumentException();
         }
 
         $date = $value['Released'] === 'N/A' ? '01-01-'.$value['Year'] : $value['Released'];
 
-        $movie = (new Movie())
+        return (new Movie())
             ->setTitle($value['Title'])
             ->setPlot($value['Plot'])
             ->setCountry($value['Country'])
@@ -34,11 +34,5 @@ class OmdbToMovieTransformer implements OmdbToEntityTransformerInterface
             ->setPoster($value['Poster'])
             ->setPrice(5.0)
         ;
-
-        foreach (explode(', ', $value['Genre']) as $name) {
-            $movie->addGenre($this->genreTransformer->transform($name));
-        }
-
-        return $movie;
     }
 }
