@@ -28,6 +28,8 @@ class MovieController extends AbstractController
     #[Route('/{id<\d+>}', name: 'app_movie_show')]
     public function show(?Movie $movie): Response
     {
+        $this->denyAccessUnlessGranted('movie.view', $movie);
+        
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
         ]);
@@ -57,8 +59,11 @@ class MovieController extends AbstractController
     #[Route('/omdb/{title}', name: 'app_movie_omdb', methods: ['GET'])]
     public function omdb(string $title, MovieProvider $provider): Response
     {
+        $movie = $provider->getOne($title, SearchTypes::Title);
+        $this->denyAccessUnlessGranted('movie.view', $movie);
+
         return $this->render('movie/show.html.twig', [
-            'movie' => $provider->getOne($title, SearchTypes::Title),
+            'movie' => $movie,
         ]);
     }
 
