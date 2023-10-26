@@ -4,9 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -24,6 +29,16 @@ class User
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $preferredChannel = null;
+
+    #[Assert\NotBlank([
+        'message' => 'Please enter a password',
+    ])]
+    #[Assert\Length([
+        'min' => 6,
+        'minMessage' => 'Your password should be at least {{ limit }} characters',
+        'max' => 4096,
+    ])]
+    private ?string $plainPassword = null;
 
     public function getId(): ?int
     {
@@ -56,7 +71,9 @@ class User
 
     public function getRoles(): array
     {
-        return $this->roles;
+        $this->roles[] = 'ROLE_USER';
+
+        return array_unique($this->roles);
     }
 
     public function setRoles(array $roles): static
@@ -76,5 +93,27 @@ class User
         $this->preferredChannel = $preferredChannel;
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): User
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function eraseCredentials()
+    {
+        $this->plainPassword = null;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
     }
 }
